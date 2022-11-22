@@ -1,0 +1,6 @@
+string command
+string item
+---
+bool done
+str[] reachable_urgent
+str[] reachable_corridors

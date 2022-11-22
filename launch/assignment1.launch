@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <!-- Run the architecture's component. -->
+
+    <node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService"/>
+    <node pkg="smach_viewer" type="smach_viewer.py" name="smach_viewer" output="screen"/>
+    
+    <node pkg="assignment1" type="robot_state.py" name = "robot_states" launch-prefix = "xterm -e"/>
+    <node pkg = "assignment1" type = "state_machine.py" name = "state_machine" launch-prefix = "xterm -e"/>
+    
+    <node pkg = "assignment1" type = "planner.py" name = "planner" launch-prefix = "xterm -e"/>
+    <node pkg = "assignment1" type = "controller.py" name = "controller" launch-prefix = "xterm -e"/>
+    
+</launch>
