@@ -36,6 +36,7 @@ def handle_control(req):
    rospy.loginfo(pnm.tag_log('Going to new location...',pnm.NODE_CONTROLLER))
    res = Controller_srvResponse()
    move_to(req)
+   time.sleep(5) # used to simulate moving time
    rospy.loginfo(pnm.tag_log('New location reached!',pnm.NODE_CONTROLLER))
    res.done = True
    return res
