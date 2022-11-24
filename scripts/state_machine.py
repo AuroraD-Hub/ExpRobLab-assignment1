@@ -25,7 +25,6 @@ import planner as Plan
 import controller as Control
 from assignment1.srv import Planner_srv, Planner_srvRequest, Planner_srvResponse
 from assignment1.srv import Controller_srv, Controller_srvRequest
-from os.path import dirname, realpath
 from std_msgs.msg import Bool, Int8
 from armor_api.armor_client import ArmorClient
 
@@ -78,7 +77,7 @@ class Charging(smach.State):
       # load ontology if needed
       pub_load = rospy.Publisher(pnm.TOPIC_LOAD_ONTOLOGY, Int8, queue_size=1, latch=True)
       sub_load = rospy.Subscriber(pnm.TOPIC_LOAD_ONTOLOGY, Int8, self.ontology_state)
-      time.sleep(1)
+      time.sleep(1) # needed for synchronisation between nodes
       if self.ont_needed == 1:
         plan.command = 'load'
         plan_client.call(plan)
