@@ -1,0 +1,5 @@
+str command
+---
+bool done
+str[] reachable_urgent
+str[] reachable_corridors
