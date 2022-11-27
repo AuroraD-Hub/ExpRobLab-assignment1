@@ -56,18 +56,43 @@ There is also a *param_name_mapper* interface that collects all the necessary in
 In the following components diagram it can be seen how this nodes interact:
 ![sw_architecture drawio](https://user-images.githubusercontent.com/72380912/204148762-aabe8d49-2ee9-44b8-8e81-11c249e43a5c.png)
 
-### State machine
-![sm_component drawio](https://user-images.githubusercontent.com/72380912/204150375-1ccb2775-2958-43b9-bab8-7af429f13fd6.png)
-
 ### Robot state
-![rs_component drawio](https://user-images.githubusercontent.com/72380912/204150388-4c89ed43-4687-4f3a-9d24-3ca2b2a410bb.png)
+The `robot_state` node is a publisher and it simulates stimuli of the robot as battery level and ontology state.
+![rs_component drawio](https://user-images.githubusercontent.com/72380912/204150388-4c89ed43-4687-4f3a-9d24-3ca2b2a410bb.png)  
+It creates two topics to which it continuosly publishes related messages:
+* */state/battery_low*: if the boolean message is *True*, then battery level is low;
+* */state/new_ontology*: if the integer message is *1*, then a new ontology has to be loaded.
+
+Simulation of the battery level is defined by a while-loop that modify the boolean value to publish accordingly to a specific delay. This delay is used to simulate both the charging time and battery usage time by setting different values based on topic message published.
 
 ### Planner
-![plan_component drawio](https://user-images.githubusercontent.com/72380912/204150391-66596e0a-8fbe-4aee-a003-cb514829ae3e.png)
+The `planner` node is a service and it plans the action that the robot should perform.
+![plan_component drawio](https://user-images.githubusercontent.com/72380912/204150391-66596e0a-8fbe-4aee-a003-cb514829ae3e.png)  
+The `Planner_srv` message is composed as follows:
+* Request:
+  * *command*: is a string message that defines the action to plan (load the ontology/exit from current location)
+* Response:
+  * *done*: is a boolean message that notify when the plan is done
+  * *reachable_urgent*: is a string list that queries all the reachable locations that the robot should visit as they are urgent
+  * *reachable_corridors*: is a string list that queries all the reachable corridors that the robot can move to if there are not urgent rooms
+
+These tasks are performed by the `planner` throught the ARMOR API Client that uses its *utils* and *query* functions for loading the ontology and exiting the location respectively.
 
 ### Controller
-![control_component drawio](https://user-images.githubusercontent.com/72380912/204150393-c65e3d55-fd9f-465e-84a2-acc1d6e49a73.png)
+The `controller` node is a service and it manages changes in the ontology when the robot moves from one location to another.
+![control_component drawio](https://user-images.githubusercontent.com/72380912/204150393-c65e3d55-fd9f-465e-84a2-acc1d6e49a73.png)  
+The `Controller_srv` message is composed as follows:
+* Request:
+  * *loc*: is a string message that defines in which location the robot is moving to
+* Response:
+  * *done*: is a boolean message that notify when the robot moved in the new location
 
+These tasks are performed by the `controller` throught the ARMOR API Client that uses its *umanipulation* functions for updating the information about location, robot and timestamps in the ontology.
+
+### State machine
+The `state_machine` node implements the Finite State Machine that manages the behaviour of the robot.  
+![sm_component drawio](https://user-images.githubusercontent.com/72380912/204150375-1ccb2775-2958-43b9-bab8-7af429f13fd6.png)  
+It subscribes to the two topics created in `robot_state` node and calls the `planner` and `controller` nodes to manipulate the ontology and move in the environment. To do that it uses the custom service requests.
 
 ## Software behaviour
 include states diagram and eventually temporal diagram
