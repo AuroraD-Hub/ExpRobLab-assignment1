@@ -8,6 +8,7 @@ In this assignment a ROS-based software architecture for a robot with surveillan
 It is based on the **OWL-DL** approach to create an ontology of the environment and it uses [SMACH](http://wiki.ros.org/smach) to implement a **Finite State Machine**. The ontology is made with Protégé and the architecture behaviour is based on [ARMOR](https://github.com/EmaroLab/armor).
 
 Related documentation on the code of this solution can be found here:  
+https://aurorad-hub.github.io/ExpRobLab-assignment1/
 
 ### Software tools needed
 Use [Protégé](https://protege.stanford.edu/) to directly open and read the ontology used here while with [SMACH viewer](http://wiki.ros.org/smach_viewer) it is possible to see how the architecture behaves in run-time.
