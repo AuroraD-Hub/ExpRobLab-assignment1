@@ -111,9 +111,17 @@ In *Waiting* state the robot has reached a URGENT location and, thus, it has to 
 * *time_out*: state machine goes in *RandomMoving* state as soon as waiting time has elapsed.  
 
 ## Installing and running
+This architecture is based on ROS Noetic and is developped in the Docker environment provided to UNIGE Robotics Engineering students.  
+Once that instructions in [Software tools needed section](#software-tools-needed) have been followed, do the following steps:
++ clone this repository in your workspace and source it
++ go in the `script` folder of this repository and run `chmod +x *`
++ go back in your workspace and run `catkin_make`
 
-To execute the assignment run:
-`roslaunch assignment1 assignment1.launch`
+To run the assignment open a terminal and execute:  
+```
+roslaunch assignment1 assignment1.launch
+```  
+Every node will display its log messages in different terminals while the ARMOR Server for the API Client will be automatically launched and a new window displaying the running state diagram with SMACH Viewer will open.
 
 ## Running code explanation
 
