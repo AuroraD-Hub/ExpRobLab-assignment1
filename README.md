@@ -1,6 +1,6 @@
 # ExpRobLab Assignment1
 **ROS-based architecture for Experimental Robotics Laboratory first assignment.**  
-Author: *Aurora Durante*, MS in Robotics Engineering, UNIGE, Genova  
+Author: *Aurora Durante*, MS in Robotics Engineering, UNIGE, Genova, Italy.
 Contact: aurora.durante@coservizi.it
 
 ## Introduction
