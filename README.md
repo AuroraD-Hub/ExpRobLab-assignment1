@@ -49,7 +49,7 @@ def class_of_ind(self, ind, bottom):
 It is composed of four nodes:
 * *state_machine*: it implements every state of the state machine and defines the behaviour of the robot;
 * *robot_state*: it simulates stimuli of the robot regarding battery and ontology states;
-* *planner*: this servie plans the necessary action that the robot should perform in a specific state and based on the stimuli;
+* *planner*: this service plans the necessary action that the robot should perform in a specific state and based on the stimuli;
 * *controller*: this service executes actions such that the robot moves in the environment.
 
 There is also a *param_name_mapper* interface that collects all the necessary information regarding names of the topics and services and values of parameters used in all the architecture. Moreover, *planner* and *controller* use the ARMOR API Client from EmaroLab.  
@@ -95,7 +95,20 @@ The `state_machine` node implements the Finite State Machine that manages the be
 It subscribes to the two topics created in `robot_state` node and calls the `planner` and `controller` nodes to manipulate the ontology and move in the environment. To do that it uses the custom service requests.
 
 ## Software behaviour
-include states diagram and eventually temporal diagram
+The state machine is composed of three states: *Charging*, *RandomMoving* and *Waiting*. They are depicted in the following state diagram with the corresponding transitions:  
+![state_diagram drawio](https://user-images.githubusercontent.com/72380912/204153843-b1b1b539-1923-48b4-88cc-0e3f4968dc13.png)  
+*Charging* state is the starting one of the architecture in which the robot waits in location E for the battery to get fully charged while loading all the information about the ontology. It has two outcomes:
+* *battery_low*: state machine stays in *Charging* until `/state/battery_low` topic informs it that battery is fully charged;
+* *ready*: state machine goes in *RandomMoving* state as soon as battery is charged.  
+
+In *RandomMoving* state the robot moves randomly in the environment staying mainly in CORRIDORs rather then in ROOMs untill a URGENT location is reachable. It has three outcomes:
+* *ready*: state machine stays in *RandomMoving* until the robot is moving between CORRIDORs that are not URGENT;
+* *battery_low*: state machine goes in *Charging* if `/state/battery_low` topic informs it that battery is low;
+* *goal_reached*: state machine goes in *Waiting* state as soon as a URGENT location is reached.  
+
+In *Waiting* state the robot has reached a URGENT location and, thus, it has to stay there for some time. It has two outcomes:
+* *battery_low*: state machine goes in *Charging* if `/state/battery_low` topic informs it that battery is low;
+* *time_out*: state machine goes in *RandomMoving* state as soon as waiting time has elapsed.  
 
 ## Installing and running
 
