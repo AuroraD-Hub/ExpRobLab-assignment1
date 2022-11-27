@@ -128,3 +128,4 @@ Every node will display its log messages in different terminals while the ARMOR 
 
 ## Working hypothesis
 
+## Limitation and future developments
