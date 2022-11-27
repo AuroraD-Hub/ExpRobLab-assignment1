@@ -1,4 +1,4 @@
-# ExpRobLab-assignment1
+# ExpRobLab Assignment1
 **ROS-based architecture for Experimental Robotics Laboratory first assignment.**  
 Author: *Aurora Durante*, MS in Robotics Engineering, UNIGE, Genova  
 Contact: aurora.durante@coservizi.it
@@ -45,12 +45,29 @@ def class_of_ind(self, ind, bottom):
             raise ArmorServiceInternalError(res.error_description, res.exit_code)
 ```
 
-## Software architecture
-include sm diagram
+## Software robot architecture
+It is composed of four nodes:
+* *state_machine*: it implements every state of the state machine and defines the behaviour of the robot;
+* *robot_state*: it simulates stimuli of the robot regarding battery and ontology states;
+* *planner*: this servie plans the necessary action that the robot should perform in a specific state and based on the stimuli;
+* *controller*: this service executes actions such that the robot moves in the environment.
+
+There is also a *param_name_mapper* interface that collects all the necessary information regarding names of the topics and services and values of parameters used in all the architecture. Moreover, *planner* and *controller* use the ARMOR API Client from EmaroLab.  
+In the following components diagram it can be seen how this nodes interact:
+![sw_architecture drawio](https://user-images.githubusercontent.com/72380912/204148762-aabe8d49-2ee9-44b8-8e81-11c249e43a5c.png)
+
 ### State machine
+![sm_component drawio](https://user-images.githubusercontent.com/72380912/204150375-1ccb2775-2958-43b9-bab8-7af429f13fd6.png)
+
 ### Robot state
+![rs_component drawio](https://user-images.githubusercontent.com/72380912/204150388-4c89ed43-4687-4f3a-9d24-3ca2b2a410bb.png)
+
 ### Planner
+![plan_component drawio](https://user-images.githubusercontent.com/72380912/204150391-66596e0a-8fbe-4aee-a003-cb514829ae3e.png)
+
 ### Controller
+![control_component drawio](https://user-images.githubusercontent.com/72380912/204150393-c65e3d55-fd9f-465e-84a2-acc1d6e49a73.png)
+
 
 ## Software behaviour
 include states diagram and eventually temporal diagram
