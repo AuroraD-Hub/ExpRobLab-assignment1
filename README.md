@@ -80,7 +80,7 @@ The `Planner_srv` message is composed as follows:
 These tasks are performed by the `planner` throught the ARMOR API Client that uses its *utils* and *query* functions for loading the ontology and exiting the location respectively.
 
 ### Controller
-The `controller` node is a service and it manages changes in the ontology when the robot moves from one location to another.
+The `controller` node is a service and it manages changes in the ontology when the robot moves from one location to another.  
 ![control_component drawio](https://user-images.githubusercontent.com/72380912/204150393-c65e3d55-fd9f-465e-84a2-acc1d6e49a73.png)  
 The `Controller_srv` message is composed as follows:
 * Request:
