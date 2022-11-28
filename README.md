@@ -144,6 +144,7 @@ To implement this solution, some hypothesis were made:
 * Robot starts in location E and waits for the information about the ontology to be loaded.
 * Robot starts with low battery level and ontology information to be loaded.
 * Topic `/state/battery_low` informs the robot if battery level is low but not critical: enough battery level for robot to move from its current location to CORRIDOR E is taken into consideration. In this way, current state doesn't need to be preempted.
+* When `state_machine` is in *RandomMoving* or *Waiting* and battery level is low, robot is able to get back in location E even if it is not directly connected to current location.
 * Topic `/state/new_ontology` informs the robot if new inormation are written in the file and, thus, if the robot need to load it again.
 * Robot moves mainly on randomly chosen CORRIDORs unless an URGENT location is reachable.
 * An URGENT location in order to be reachable has to be directly connected with the location in which Robot1 is currently in. In this way, the waiting time simulated in `controller` node to move the robot between locations is always the same.
