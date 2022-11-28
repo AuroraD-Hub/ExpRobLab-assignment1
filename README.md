@@ -134,7 +134,7 @@ To implement this solution, some hypothesis were made:
 * Topic `/state/battery_low` informs the robot if battery level is low but not critical: enough battery level for robot to move from its current location to CORRIDOR E is taken into consideration. In this way, current state doesn't need to be preempted.
 * Robot moves mainly on randomly chosen CORRIDORs unless an URGENT location is reachable.
 
-## Limitation and future imporvements
+## Limitation and future improvements
 In this solution synchronisation between nodes is defined by the programmer since waiting and simulation time are multiples of 5. Moreover, planner and controller services would actually be blocking nodes, but the execution of their code is basically instantaneous.  
 Since these are not optimal approaches for a in real life survaillance robot, these aspects need improvements. One solution is to make `planner` and `controller` as [ROS Action](http://wiki.ros.org/actionlib) instead of Service: whenever a stimulus is given, robot can react immediately (making synchronisation between nodes not programmer-dependant) and current state can be preempted (`planner` and `controller` nodes are not blocking anymore).  
 These improvements will be developped in *ExpRobLab Assignment 2*.
