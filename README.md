@@ -56,7 +56,7 @@ It is composed of four nodes:
 
 There is also a *param_name_mapper* interface that collects all the necessary information regarding names of the topics and services and values of parameters used in all the architecture. Moreover, *planner* and *controller* use the ARMOR API Client from EmaroLab.  
 In the following components diagram it can be seen how these nodes interact:
-![sw_architecture drawio](https://user-images.githubusercontent.com/72380912/204335578-670582d8-c105-4ff2-b7a6-8de064bb36b2.jpeg)
+![sw_architecture drawio](https://user-images.githubusercontent.com/72380912/204392627-fe4e0977-16ca-4a53-b283-7f33e23c0ffb.jpeg)
 
 
 ### Robot state
