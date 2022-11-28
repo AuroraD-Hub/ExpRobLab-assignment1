@@ -5,7 +5,7 @@ Contact: aurora.durante@coservizi.it
 
 ## Introduction
 In this assignment a ROS-based software architecture for a robot with surveillance porpouse is defined.  
-It is based on the **OWL-DL** approach to create an ontology of the environment and it uses [SMACH](http://wiki.ros.org/smach) to implement a **Finite State Machine**. The ontology is made with Protégé and the architecture behaviour is based on [ARMOR](https://github.com/EmaroLab/armor).
+It is based on the **OWL-DL** approach to create an ontology of the environment and it uses [SMACH](http://wiki.ros.org/smach) to implement a **Finite State Machine** to control robot behaviour. The ontology is made with Protégé and the architecture behaviour is based on [ARMOR](https://github.com/EmaroLab/armor).
 
 Related documentation on the code of this solution can be found here:  
 https://aurorad-hub.github.io/ExpRobLab-assignment1/
@@ -54,7 +54,7 @@ It is composed of four nodes:
 * *controller*: this service executes actions such that the robot moves in the environment.
 
 There is also a *param_name_mapper* interface that collects all the necessary information regarding names of the topics and services and values of parameters used in all the architecture. Moreover, *planner* and *controller* use the ARMOR API Client from EmaroLab.  
-In the following components diagram it can be seen how this nodes interact:
+In the following components diagram it can be seen how these nodes interact:
 ![sw_architecture drawio](https://user-images.githubusercontent.com/72380912/204148762-aabe8d49-2ee9-44b8-8e81-11c249e43a5c.png)
 
 ### Robot state
@@ -88,7 +88,7 @@ The `Controller_srv` message is composed as follows:
 * Response:
   * *done*: is a boolean message that notify when the robot moved in the new location
 
-These tasks are performed by the `controller` throught the ARMOR API Client that uses its *umanipulation* functions for updating the information about location, robot and timestamps in the ontology.
+These tasks are performed by the `controller` throught the ARMOR API Client that uses its *manipulation* functions for updating the information about location, robot and timestamps in the ontology.
 
 ### State machine
 The `state_machine` node implements the Finite State Machine that manages the behaviour of the robot.  
@@ -127,5 +127,14 @@ Every node will display its log messages in different terminals while the ARMOR 
 ## Running code explanation
 
 ## Working hypothesis
+To implement this solution, some hypothesis were made:
+* Robot can charge its battery only in CORRIDOR E;
+* Robot starts in location E and waits for the information about the ontology to be loaded;
+* Robot starts with low battery level;
+* Topic `/state/battery_low` informs the robot if battery level is low but not critical: enough battery level for robot to move from its current location to CORRIDOR E is taken into consideration. In this way, current state doesn't need to be preempted.
+* Robot moves mainly on randomly chosen CORRIDORs unless an URGENT location is reachable.
 
-## Limitation and future developments
+## Limitation and future imporvements
+In this solution synchronisation between nodes is defined by the programmer since waiting and simulation time are multiples of 5. Moreover, planner and controller services would actually be blocking nodes, but the execution of their code is basically instantaneous.  
+Since these are not optimal approaches for a in real life survaillance robot, these aspects need improvements. One solution is to make `planner` and `controller` as [ROS Action](http://wiki.ros.org/actionlib) instead of Service: whenever a stimulus is given, robot can react immediately (making synchronisation between nodes not programmer-dependant) and current state can be preempted (`planner` and `controller` nodes are not blocking anymore).  
+These improvements will be developped in *ExpRobLab Assignment 2*.
