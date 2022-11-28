@@ -127,7 +127,7 @@ Every node will display its log messages in different terminals while the ARMOR 
 
 ## Running code explanation
 In the following video it can be seen how the architecture behaves:  
-
+https://user-images.githubusercontent.com/72380912/204269924-64aab128-db50-437d-9e45-ee8128d01f20.mp4
 
 ## Working hypothesis
 To implement this solution, some hypothesis were made:
