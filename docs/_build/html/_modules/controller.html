@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>controller &mdash; ExpRobLab Assignment 1 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> ExpRobLab Assignment 1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ExpRobLab Assignment 1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for controller</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module::controller</span>
+<span class="sd">   :platform: Ubuntu 20.04</span>
+<span class="sd">   :snyopsis: This module defines the controller of the architecture.</span>
+
+<span class="sd">.. moduleauthor::Aurora Durante</span>
+
+<span class="sd">Here a service defining the controller of the architecture is created.</span>
+<span class="sd">It controls robot movements in the environment by manipulating the ontology</span>
+<span class="sd">through the aRMOR API client by EmaroLab.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">param_name_mapper</span> <span class="k">as</span> <span class="nn">pnm</span>
+<span class="kn">from</span> <span class="nn">assignment1.srv</span> <span class="kn">import</span> <span class="n">Controller_srv</span><span class="p">,</span> <span class="n">Controller_srvResponse</span>
+<span class="kn">from</span> <span class="nn">armor_api.armor_client</span> <span class="kn">import</span> <span class="n">ArmorClient</span>
+
+<span class="c1"># A tag for identifying logs producer.</span>
+<span class="n">LOG_TAG</span> <span class="o">=</span> <span class="n">pnm</span><span class="o">.</span><span class="n">NODE_CONTROLLER</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s1">&#39;client&#39;</span><span class="p">,</span><span class="s1">&#39;assignment&#39;</span><span class="p">)</span>
+
+<span class="c1"># An ArmorClient to simulate motion controlling.</span>
+<div class="viewcode-block" id="control"><a class="viewcode-back" href="../index.html#controller.control">[docs]</a><span class="k">def</span> <span class="nf">control</span><span class="p">():</span>
+   <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Controller node initialized.</span>
+<span class="sd">     </span>
+<span class="sd">   Here, service controller is instantiated.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="n">rospy</span><span class="o">.</span><span class="n">init_node</span><span class="p">(</span><span class="s1">&#39;controller_node&#39;</span><span class="p">)</span>
+   <span class="n">ser</span> <span class="o">=</span> <span class="n">rospy</span><span class="o">.</span><span class="n">Service</span><span class="p">(</span><span class="s1">&#39;/control&#39;</span><span class="p">,</span> <span class="n">Controller_srv</span><span class="p">,</span> <span class="n">handle_control</span><span class="p">)</span>
+   <span class="n">rospy</span><span class="o">.</span><span class="n">spin</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="handle_control"><a class="viewcode-back" href="../index.html#controller.handle_control">[docs]</a><span class="k">def</span> <span class="nf">handle_control</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Service callback.</span>
+<span class="sd">   The controller manages the location changes by manipulating the ontology.</span>
+<span class="sd">   </span>
+<span class="sd">   :param req: The request of the service</span>
+<span class="sd">   :type req: Controller_srv</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="n">pnm</span><span class="o">.</span><span class="n">tag_log</span><span class="p">(</span><span class="s1">&#39;Going to new location. Just wait a little...&#39;</span><span class="p">,</span><span class="n">pnm</span><span class="o">.</span><span class="n">NODE_CONTROLLER</span><span class="p">))</span>
+   <span class="n">res</span> <span class="o">=</span> <span class="n">Controller_srvResponse</span><span class="p">()</span>
+   <span class="n">move_to</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+   <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># used to simulate moving time</span>
+   <span class="n">pos</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">objectprop_b2_ind</span><span class="p">(</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">)</span>
+   <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="n">pnm</span><span class="o">.</span><span class="n">tag_log</span><span class="p">(</span><span class="s1">&#39;New location reached! Robot is now in:&#39;</span><span class="p">,</span><span class="n">pnm</span><span class="o">.</span><span class="n">NODE_CONTROLLER</span><span class="p">))</span>
+   <span class="n">pos</span> <span class="o">=</span> <span class="n">split_str</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+   <span class="n">res</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+   <span class="k">return</span> <span class="n">res</span></div>
+  
+<div class="viewcode-block" id="move_to"><a class="viewcode-back" href="../index.html#controller.move_to">[docs]</a><span class="k">def</span> <span class="nf">move_to</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   The controller change position of the robot in the ontology.</span>
+<span class="sd">   It updates the new location and the timestamps needed to identify current time and</span>
+<span class="sd">   last visit to the location.</span>
+<span class="sd">   </span>
+<span class="sd">   :param req: The request of the service</span>
+<span class="sd">   :type req: Controller_srv</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="c1"># Retrive current position</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">sync_buffered_reasoner</span><span class="p">()</span>
+   <span class="n">current_pos</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">objectprop_b2_ind</span><span class="p">(</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">)</span> <span class="c1">#current position</span>
+   <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="n">pnm</span><span class="o">.</span><span class="n">tag_log</span><span class="p">(</span><span class="s1">&#39;Robot1 was in location:&#39;</span><span class="p">,</span><span class="n">pnm</span><span class="o">.</span><span class="n">NODE_CONTROLLER</span><span class="p">))</span>
+   <span class="n">current_pos</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">split_str</span><span class="p">(</span><span class="n">current_pos</span><span class="p">))</span>
+   <span class="c1"># Replace new position</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">manipulation</span><span class="o">.</span><span class="n">replace_objectprop_b2_ind</span><span class="p">(</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">loc</span><span class="p">,</span> <span class="n">current_pos</span><span class="p">)</span>
+   <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="n">pnm</span><span class="o">.</span><span class="n">tag_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Robot1 is going in </span><span class="si">{</span><span class="n">req</span><span class="o">.</span><span class="n">loc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">pnm</span><span class="o">.</span><span class="n">NODE_CONTROLLER</span><span class="p">))</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">sync_buffered_reasoner</span><span class="p">()</span>
+   <span class="c1"># Retrive current timestamp and last time loc was visited</span>
+   <span class="n">current_time</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">dataprop_b2_ind</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">)</span> <span class="c1">#current time</span>
+   <span class="n">current_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="mi">11</span><span class="p">]</span>
+   <span class="n">last_visit</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">dataprop_b2_ind</span><span class="p">(</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">loc</span><span class="p">)</span> <span class="c1"># last time loc was visited</span>
+   <span class="n">last_visit</span> <span class="o">=</span> <span class="n">last_visit</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="mi">11</span><span class="p">]</span>
+   <span class="c1"># Replace new timestamp and new visit to loc</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">manipulation</span><span class="o">.</span><span class="n">replace_dataprop_b2_ind</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())),</span> <span class="n">current_time</span><span class="p">)</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">manipulation</span><span class="o">.</span><span class="n">replace_dataprop_b2_ind</span><span class="p">(</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">loc</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">,</span> <span class="n">current_time</span><span class="p">,</span> <span class="n">last_visit</span><span class="p">)</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">sync_buffered_reasoner</span><span class="p">()</span> <span class="c1"># call the Reasoner</span>
+   <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="n">pnm</span><span class="o">.</span><span class="n">tag_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Robot1 moved in location </span><span class="si">{</span><span class="n">req</span><span class="o">.</span><span class="n">loc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">pnm</span><span class="o">.</span><span class="n">NODE_CONTROLLER</span><span class="p">))</span></div>
+   
+
+<div class="viewcode-block" id="split_str"><a class="viewcode-back" href="../index.html#controller.split_str">[docs]</a><span class="k">def</span> <span class="nf">split_str</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function used to get queried object from string.</span>
+<span class="sd">    </span>
+<span class="sd">    :param string: The string to split to get information needed</span>
+<span class="sd">    :type string: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">length</span><span class="p">):</span>
+       <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">32</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Instantiate the node manager service and wait.</span>
+    <span class="n">control</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Aurora Durante.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
