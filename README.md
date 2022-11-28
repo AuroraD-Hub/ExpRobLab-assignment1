@@ -133,7 +133,7 @@ https://user-images.githubusercontent.com/72380912/204270658-b7bb81ed-aada-4c8b-
 At first, it starts in *Charging* state. From the `planner` terminal it can be seen that Robot1 loads the ontology while from `robot_state` terminal battery is reacharging.  
 As soon as battery is charged, `state_machine` terminal shows the transition to *RandomMoving* state. In the meantime, `planner` terminal queries all the reachable locations among which `state_machine` randomly chooses one and then `controller` terminal manipulates the ontology to move Robot1 in the chosen location.  
 While in *RandomMoving*, `planner` terminal queries all the reachable locations both URGENT and not anymore again and `state_machine` chooses accordingly. In this case, a URGENT location is chosen and then transition to *Waiting* state happens.  
-In *Waiting* state, `state_machine` waits some time in current location and then chooses from the queried reachable locations by the `planner` where to move and calls the `controller` to do it.
+In *Waiting* state, `state_machine` waits some time in current location and then chooses from the queried reachable locations by the `planner` where to move and calls the `controller` to do it. Then, `state_machine` shows th transition to *RandomMoving* state again.
 
 Then, an issue arise because it seems that Robot1 is simultaneously in two different locations and, thus, the `planner` queries an empty list when reachable locations are asked. For this reason, `state_machine` terminal states that it cannot choose any object in an empty list.
 
