@@ -126,6 +126,8 @@ roslaunch assignment1 assignment1.launch
 Every node will display its log messages in different terminals while the ARMOR Server for the API Client will be automatically launched and a new window displaying the running state diagram with SMACH Viewer will open.
 
 ## Running code explanation
+In the following video it can be seen how the architecture behaves:  
+
 
 ## Working hypothesis
 To implement this solution, some hypothesis were made:
@@ -140,3 +142,4 @@ In this solution synchronisation between nodes is defined by the programmer sinc
 Since these are not optimal approaches for a in real life survaillance robot, these aspects need improvements. One solution is to make `planner` and `controller` as [ROS Action](http://wiki.ros.org/actionlib) instead of Service: whenever a stimulus is given, robot can react immediately (making synchronisation between nodes not programmer-dependant) and current state can be preempted (`planner` and `controller` nodes are not blocking anymore).  
 These improvements will be developped in *ExpRobLab Assignment 2*.
 
+There is another problem I was not able to solve as can be seen in [Running code explanation section](#running-code-explanation): when the state machine goes in *RandomMoving* state the second time, an error occurs. This is due to the fact that the API doesn't remove previous instance of `isIn` object property while the `controller' command to replace it with a new instance. In fact, it can be seen in the `controller` terminal that the ontology says Robot1 is in two different location even if it is not logically possible.
