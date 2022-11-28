@@ -57,5 +57,5 @@ breathe_default_members = ('members', 'undoc-members')
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'haiku'
+html_theme = 'sphinx_rdt_themes'
 html_static_path = ['_static']
