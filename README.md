@@ -130,18 +130,27 @@ In the following video it can be seen how the architecture behaves:
 
 https://user-images.githubusercontent.com/72380912/204270658-b7bb81ed-aada-4c8b-86a5-9c5022f18f90.mp4
 
+At first, it starts in *Charging* state. From the `planner` terminal it can be seen that Robot1 loads the ontology while from `robot_state` terminal battery is reacharging.  
+As soon as battery is charged, `state_machine` terminal shows the transition to *RandomMoving* state. In the meantime, `planner` terminal queries all the reachable locations among which `state_machine` randomly chooses one and then `controller` terminal manipulates the ontology to move Robot1 in the chosen location.  
+While in *RandomMoving*, `planner` terminal queries all the reachable locations both URGENT and not anymore again and `state_machine` chooses accordingly. In this case, a URGENT location is chosen and then transition to *Waiting* state happens.  
+In *Waiting* state, `state_machine` waits some time in current location and then chooses from the queried reachable locations by the `planner` where to move and calls the `controller` to do it.
+
+Then, an issue arise because it seems that Robot1 is simultaneously in two different locations and, thus, the `planner` queries an empty list when reachable locations are asked. For this reason, `state_machine` terminal states that it cannot choose any object in an empty list.
 
 ## Working hypothesis
 To implement this solution, some hypothesis were made:
-* Robot can charge its battery only in CORRIDOR E;
-* Robot starts in location E and waits for the information about the ontology to be loaded;
-* Robot starts with low battery level;
+* Robot can charge its battery only in CORRIDOR E.
+* Robot starts in location E and waits for the information about the ontology to be loaded.
+* Robot starts with low battery level and ontology information to be loaded.
 * Topic `/state/battery_low` informs the robot if battery level is low but not critical: enough battery level for robot to move from its current location to CORRIDOR E is taken into consideration. In this way, current state doesn't need to be preempted.
+* Topic `/state/new_ontology` informs the robot if new inormation are written in the file and, thus, if the robot need to load it again.
 * Robot moves mainly on randomly chosen CORRIDORs unless an URGENT location is reachable.
+* An URGENT location in order to be reachable has to be directly connected with the location in which Robot1 is currently in. In this way, the waiting time simulated in `controller` node to move the robot between locations is always the same.
+* At first, all the locations (both CORRIDORs and ROOMs) are URGENT.
 
 ## Limitation and future improvements
-In this solution synchronisation between nodes is defined by the programmer since waiting and simulation time are multiples of 5. Moreover, planner and controller services would actually be blocking nodes, but the execution of their code is basically instantaneous.  
-Since these are not optimal approaches for a in real life survaillance robot, these aspects need improvements. One solution is to make `planner` and `controller` as [ROS Action](http://wiki.ros.org/actionlib) instead of Service: whenever a stimulus is given, robot can react immediately (making synchronisation between nodes not programmer-dependant) and current state can be preempted (`planner` and `controller` nodes are not blocking anymore).  
+In this solution synchronisation between nodes is defined by the programmer since waiting and simulation time are multiples of 5. Moreover, planner and controller services would actually be blocking nodes, but the execution of their code is basically instantaneous. Since these are not optimal approaches for a in real life survaillance robot, these aspects need improvements. One solution is to make `planner` and `controller` as [ROS Action](http://wiki.ros.org/actionlib) instead of Service: whenever a stimulus is given, robot can react immediately (making synchronisation between nodes not programmer-dependant) and current state can be preempted (`planner` and `controller` nodes are not blocking anymore).  
+Moreover, also the ontology loading approach could be improved since this is based on a static known a priori environment. When this is not the case, it may be better to implement a specific node controlling the environment and manipulating the ontology.  
 These improvements will be developped in *ExpRobLab Assignment 2*.
 
 There is another problem I was not able to solve as can be seen in [Running code explanation section](#running-code-explanation): when the state machine goes in *RandomMoving* state the second time, an error occurs. This is due to the fact that the API doesn't remove previous instance of `isIn` object property while the `controller` command to replace it with a new instance. In fact, it can be seen in the `controller` terminal that the ontology says Robot1 is in two different location even if it is not logically possible.
