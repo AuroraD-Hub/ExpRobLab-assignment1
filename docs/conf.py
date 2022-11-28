@@ -30,7 +30,8 @@ extensions = ['sphinx.ext.autodoc',
 	      'sphinx.ext.viewcode',
 	      'sphinx.ext.githubpages',
 	      'sphinx.ext.inheritance_diagram',
-	      'breathe']
+	      'breathe',
+	      'notfound.extension']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
