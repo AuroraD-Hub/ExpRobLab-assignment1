@@ -56,12 +56,12 @@ It is composed of four nodes:
 
 There is also a *param_name_mapper* interface that collects all the necessary information regarding names of the topics and services and values of parameters used in all the architecture. Moreover, *planner* and *controller* use the ARMOR API Client from EmaroLab.  
 In the following components diagram it can be seen how these nodes interact:
-![sw_architecture drawio](https://user-images.githubusercontent.com/72380912/204335578-670582d8-c105-4ff2-b7a6-8de064bb36b2.png)
+![sw_architecture drawio](https://user-images.githubusercontent.com/72380912/204335578-670582d8-c105-4ff2-b7a6-8de064bb36b2.jpeg)
 
 
 ### Robot state
 The `robot_state` node is a publisher and it simulates stimuli of the robot as battery level and ontology state.
-![rs_component drawio](https://user-images.githubusercontent.com/72380912/204335645-7f538f83-4958-4a26-b6ad-0f19bed95860.png)  
+![rs_component drawio](https://user-images.githubusercontent.com/72380912/204335645-7f538f83-4958-4a26-b6ad-0f19bed95860.jpeg)  
 It creates two topics to which it continuosly publishes related messages:
 * */state/battery_low*: if the boolean message is *True*, then battery level is low;
 * */state/new_ontology*: if the integer message is *1*, then a new ontology has to be loaded.
@@ -70,7 +70,7 @@ Simulation of the battery level is defined by a while-loop that modify the boole
 
 ### Planner
 The `planner` node is a service and it plans the action that the robot should perform.  
-![plan_component drawio](https://user-images.githubusercontent.com/72380912/204335795-cbb8e95b-1318-4800-ae4b-4cdf0a0dfe2f.png)  
+![plan_component drawio](https://user-images.githubusercontent.com/72380912/204335795-cbb8e95b-1318-4800-ae4b-4cdf0a0dfe2f.jpeg)  
 The `Planner_srv` message is composed as follows:
 * Request:
   * *command*: is a string message that defines the action to plan (load the ontology/exit from current location)
@@ -83,7 +83,7 @@ These tasks are performed by the `planner` throught the ARMOR API Client that us
 
 ### Controller
 The `controller` node is a service and it manages changes in the ontology when the robot moves from one location to another.  
-![control_component drawio](https://user-images.githubusercontent.com/72380912/204335859-0fae1251-6474-48a4-8d53-58ab511a6b0e.png)  
+![control_component drawio](https://user-images.githubusercontent.com/72380912/204335859-0fae1251-6474-48a4-8d53-58ab511a6b0e.jpeg)  
 The `Controller_srv` message is composed as follows:
 * Request:
   * *loc*: is a string message that defines in which location the robot is moving to
@@ -94,12 +94,12 @@ These tasks are performed by the `controller` throught the ARMOR API Client that
 
 ### State machine
 The `state_machine` node implements the Finite State Machine that manages the behaviour of the robot.  
-![sm_component drawio](https://user-images.githubusercontent.com/72380912/204335913-55fcdff1-a630-4b58-85ed-e2af3faf6e94.png)  
+![sm_component drawio](https://user-images.githubusercontent.com/72380912/204335913-55fcdff1-a630-4b58-85ed-e2af3faf6e94.jpeg)  
 It subscribes to the two topics created in `robot_state` node and calls the `planner` and `controller` nodes to manipulate the ontology and move in the environment. To do that it uses the custom service requests.
 
 ## Software behaviour
 The state machine is composed of three states: *Charging*, *RandomMoving* and *Waiting*. They are depicted in the following state diagram with the corresponding transitions:  
-![state_diagram drawio](https://user-images.githubusercontent.com/72380912/204335990-a145df28-3f5d-4f6c-a9a9-f35644e99646.png)
+![state_diagram drawio](https://user-images.githubusercontent.com/72380912/204335990-a145df28-3f5d-4f6c-a9a9-f35644e99646.jpeg)  
 *Charging* state is the starting one of the architecture in which the robot waits in location E for the battery to get fully charged while loading all the information about the ontology. It has two outcomes:
 * *battery_low*: state machine stays in *Charging* until `/state/battery_low` topic informs it that battery is fully charged;
 * *ready*: state machine goes in *RandomMoving* state as soon as battery is charged.  
